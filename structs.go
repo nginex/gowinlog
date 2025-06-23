@@ -34,6 +34,11 @@ type WinLogEvent struct {
 	IdText             string
 	PublisherHandleErr error
 
+	// XML body
+
+	Xml    string
+	XmlErr error
+
 	// Serialied XML bookmark to
 	// restart at this event
 	Bookmark string

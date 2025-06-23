@@ -1,3 +1,4 @@
+//go:build windows
 // +build windows
 
 package winlog
@@ -155,6 +156,9 @@ func (self *WinLogWatcher) convertEvent(handle EventHandle, subscribedChannel st
 	var publisherHandle PublisherHandle
 	var publisherHandleErr error
 
+	// Render XML, any error is stored in the returned WinLogEvent
+	xml, xmlErr := RenderEventXML(handle)
+
 	// Render the values
 	renderedFields, renderedFieldsErr := RenderEventValues(self.renderContext, handle)
 	if renderedFieldsErr == nil {
@@ -214,6 +218,8 @@ func (self *WinLogWatcher) convertEvent(handle EventHandle, subscribedChannel st
 	CloseEventHandle(uint64(publisherHandle))
 
 	event := WinLogEvent{
+		Xml:               xml,
+		XmlErr:            xmlErr,
 		ProviderName:      providerName,
 		EventId:           eventId,
 		Qualifiers:        qualifiers,
